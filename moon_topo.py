@@ -54,7 +54,7 @@ ax.set_extent([lon[0], lon[-1], lat[0], lat[-1]], crs=ccrs.PlateCarree())
 #ax.contourf(lon, lat, np.ones_like(z),lev,transform=ccrs.PlateCarree(0.0),cmap="magma",extend="both")
 
 #ax.contourf(lon, lat, dzdy,lights,transform=ccrs.PlateCarree(0.0),cmap="Greys",extend="both")
-#ax.contourf(lon, lat, lowlights,lights,transform=ccrs.PlateCarree(0.0),cmap="Greys",alpha=0.3)
+#ax.contourf(lon, lat, lowlights,lights,transform=ccrs.PlateCarree(0.0),cmap="Greys",alpha=1.0)
 q = ax.contourf(lon, lat, z,lev,transform=ccrs.PlateCarree(0.0),cmap=phase2,extend="both")
 # 
 # dr = 0.1
@@ -72,5 +72,5 @@ cb.set_ticks([-500,-400,-300,-200,-100,0,100,200,300,400,500])
 ax.set_title("Moon geoid",loc="left")
 cb.set_label("[m]")
 
-plt.savefig("figs/map_z_phase3.png",dpi=300)
+plt.savefig("figs/moon_z_phase.png",dpi=300)
 plt.close(fig)
