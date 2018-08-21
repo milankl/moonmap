@@ -32,10 +32,10 @@ dz_mars = np.gradient(z_mars,axis=0)
 
 ## plot data
 
-# levels for contourf
+# vmin vmax for pcolormesh
 # use percentiles to ignore outliers
-lights_moon = np.linspace(np.percentile(dz_moon,0.5),np.percentile(dz_moon,99.5),32)
-lights_mars = np.linspace(np.percentile(dz_mars,0.5),np.percentile(dz_mars,99.5),64)
+lev_moon = (np.percentile(dz_moon,2),np.percentile(dz_moon,98))
+lev_mars = (np.percentile(dz_mars,1),np.percentile(dz_mars,99))
 
 # figure
 fig = plt.figure(figsize=(8,4))
@@ -55,8 +55,8 @@ ax_moon.set_global()
 ax_mars.set_global()
 
 # plotting the gradient
-ax_moon.contourf(lon_moon,lat_moon,dz_moon,lights_moon,transform=contourfproj,cmap="Greys",extend="both")
-ax_mars.contourf(lon_mars,lat_mars,dz_mars,lights_mars,transform=contourfproj,cmap="Greys",extend="both")
+ax_moon.pcolormesh(lon_moon,lat_moon,dz_moon,vmin=lev_moon[0],vmax=lev_moon[1],transform=contourfproj,cmap="Greys")
+ax_mars.pcolormesh(lon_mars,lat_mars,dz_mars,vmin=lev_mars[0],vmax=lev_mars[1],transform=contourfproj,cmap="Greys")
 
 ax_moon.set_title("Moon",loc="left",color="w")
 ax_mars.set_title("Mars",loc="left",color="w")
