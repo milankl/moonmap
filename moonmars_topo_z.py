@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 from netCDF4 import Dataset
 from cmaputil import cm
+from cmocean import cm as cmo
 
 path1 = "/local/kloewer/marsmoon/Moon/LOLA2600p_geoid.grd"
 path2 = "/local/kloewer/marsmoon/Mars/MarsTopo_geoid_jgmro_110c.grd"
@@ -26,10 +27,10 @@ z_mars = nc["z"][y0:y1,x0:x1]
 
 ## plot data
 
-# levels for contourf
+# vmin vmax for pcolormesh
 # use percentiles to ignore outliers
-lev_moon = np.linspace(np.percentile(z_moon,0.5),np.percentile(z_moon,99.9),64)
-lev_mars = np.linspace(np.percentile(z_mars,0.5),np.percentile(z_mars,99.99),64)
+lev_moon = (np.percentile(z_moon,2),np.percentile(z_moon,99.8))
+lev_mars = (np.percentile(z_mars,1),np.percentile(z_mars,99.9))
 
 # figure
 fig = plt.figure(figsize=(8,4))
@@ -51,16 +52,16 @@ ax_moon.set_global()
 ax_mars.set_global()
 
 # plotting the height
-qmo = ax_moon.contourf(lon_moon,lat_moon,z_moon,lev_moon,transform=contourfproj,cmap=cm.cividis,extend="both")
-qma = ax_mars.contourf(lon_mars,lat_mars,z_mars,lev_mars,transform=contourfproj,cmap=cm.cividis,extend="both")
+qmo = ax_moon.pcolormesh(lon_moon,lat_moon,z_moon,vmin=lev_moon[0],vmax=lev_moon[1],transform=contourfproj,cmap=cm.cividis)
+qma = ax_mars.pcolormesh(lon_mars,lat_mars,z_mars,vmin=lev_mars[0],vmax=lev_mars[1],transform=contourfproj,cmap=cmo.thermal)
 
-cb_moon = plt.colorbar(qmo,cax=cax_moon,orientation="horizontal")
-cb_moon.set_ticks(np.arange(-4,8,1))
+cb_moon = plt.colorbar(qmo,cax=cax_moon,orientation="horizontal",extend="both")
+cb_moon.set_ticks(np.arange(-6,9,2))
 cb_moon.ax.tick_params(labelsize=8,color="w",labelcolor="w")
 cb_moon.outline.set_edgecolor("w")
 cb_moon.set_label("Topography [km]",color="w",size=8)
 
-cb_mars = plt.colorbar(qma,cax=cax_mars,orientation="horizontal")
+cb_mars = plt.colorbar(qma,cax=cax_mars,orientation="horizontal",extend="both")
 cb_mars.set_ticks(np.arange(-10,30,2))
 cb_mars.ax.tick_params(labelsize=8,color="w",labelcolor="w")
 cb_mars.outline.set_edgecolor("w")
@@ -69,5 +70,5 @@ cb_mars.set_label("Topography [km]",color="w",size=8)
 ax_moon.set_title("Moon",loc="left",color="w")
 ax_mars.set_title("Mars",loc="left",color="w")
 
-plt.savefig("figs/moon_mars_z.png",dpi=300,facecolor="k")
+plt.savefig("figs/moon_mars_z_thermal.png",dpi=300,facecolor="k")
 plt.close(fig)
