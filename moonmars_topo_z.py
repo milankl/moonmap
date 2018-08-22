@@ -4,9 +4,14 @@ import cartopy.crs as ccrs
 from netCDF4 import Dataset
 from cmaputil import cm
 from cmocean import cm as cmo
+from matplotlib.colors import LinearSegmentedColormap
 
 path1 = "/local/kloewer/marsmoon/Moon/LOLA2600p_geoid.grd"
 path2 = "/local/kloewer/marsmoon/Mars/MarsTopo_geoid_jgmro_110c.grd"
+
+# import colormap
+davos = LinearSegmentedColormap.from_list("test",np.loadtxt("/home/kloewer/python/colormaps/davos/davos.txt"))
+lajolla = LinearSegmentedColormap.from_list("test",np.loadtxt("/home/kloewer/python/colormaps/lajolla/lajolla.txt"))
 
 # read data Moon
 nc = Dataset(path1)
@@ -52,8 +57,8 @@ ax_moon.set_global()
 ax_mars.set_global()
 
 # plotting the height
-qmo = ax_moon.pcolormesh(lon_moon,lat_moon,z_moon,vmin=lev_moon[0],vmax=lev_moon[1],transform=contourfproj,cmap=cm.cividis)
-qma = ax_mars.pcolormesh(lon_mars,lat_mars,z_mars,vmin=lev_mars[0],vmax=lev_mars[1],transform=contourfproj,cmap=cmo.thermal)
+qmo = ax_moon.pcolormesh(lon_moon,lat_moon,z_moon,vmin=lev_moon[0],vmax=lev_moon[1],transform=contourfproj,cmap=davos)
+qma = ax_mars.pcolormesh(lon_mars,lat_mars,z_mars,vmin=lev_mars[0],vmax=lev_mars[1],transform=contourfproj,cmap=lajolla.reversed())
 
 cb_moon = plt.colorbar(qmo,cax=cax_moon,orientation="horizontal",extend="both")
 cb_moon.set_ticks(np.arange(-6,9,2))
@@ -70,5 +75,5 @@ cb_mars.set_label("Topography [km]",color="w",size=8)
 ax_moon.set_title("Moon",loc="left",color="w")
 ax_mars.set_title("Mars",loc="left",color="w")
 
-plt.savefig("figs/moon_mars_z_thermal.png",dpi=300,facecolor="k")
+plt.savefig("figs/moon_mars_z_davos.png",dpi=300,facecolor="k")
 plt.close(fig)
